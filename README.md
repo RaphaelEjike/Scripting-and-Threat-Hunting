@@ -1,1 +1,1 @@
-# Scripting-and-Threat-Hunting
+# Scripting and Threat-Hunting
