@@ -229,13 +229,8 @@ For each query, the summary statistics provide a count of events grouped by rele
     
 Resources 
 - <a href="https://www.kqlsearch.com/">www.kqlsearch.com</a>
-
-
-
-
-
-
-
-
-
+- <a href="https://learn.microsoft.com/en-us/kusto/query/tutorials/learn-common-operators?view=azure-data-explorer&preserve-view=true&pivots=azuredataexplorer">Kusto query tutorials</a>
+- <a href="https://kqlquery.com/">https://kqlquery.com/</a>
+- <a href="https://kqlquery.com/posts/kql_sources/">https://kqlquery.com/posts/kql_sources/</a>
+- <a href="https://github.com/marcusbakker/KQL/blob/master/kql_cheat_sheet_dark.pdf">https://github.com/marcusbakker/KQL/blob/master/kql_cheat_sheet_dark.pdf</a>
 
