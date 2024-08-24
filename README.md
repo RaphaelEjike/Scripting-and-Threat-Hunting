@@ -29,6 +29,76 @@ DeviceEvents
 
 ```
 
+# KQL Queries with Explanations and Use Cases
+
+Here are 10 common KQL queries used during a data breach due to phishing and malware, including user activities, network traffic, and system events, using data from Azure Active Directory logs and Defender for Endpoint alerts. Each query includes placeholders for malicious indicators and step-by-step explanations.
+
+
+## Defender For Endpoint
+
+### Malware Alerts by Device
+Use Case: Tracks devices affected by known malware.
+```
+DeviceEvents
+| where Timestamp >= ago(24h)
+| where FileHash in ('{MaliciousHash}')
+| summarize AlertCount = count() by DeviceName, FileHash
+
+```
+Explanation:
+
+<ul>
+  <li>DeviceEvents: Table containing device-related events.</li>
+  <li>Timestamp >= ago(24h): Filter to the last 24 hours.</li>
+  <li>FileHash in ('{MaliciousHash}'): Filter by malicious file hashes.</li>
+<li>summarize AlertCount = count() by DeviceName, FileHash: Summarize alert counts by device and file hash.</li>
+</ul>
+
+
+## Azure Sentinel
+
+### Suspicious Logins by User
+Use Case: Identifies suspicious login attempts from known malicious IP addresses.
+```
+SigninLogs
+| where TimeGenerated >= ago(24h)
+| where IPAddress in ('{MaliciousIP}')
+| summarize LoginCount = count() by UserPrincipalName, IPAddress
+
+```
+Explanation:
+
+<ul>
+  <li>SigninLogs: Table containing login records.</li>
+  <li>TimeGenerated >= ago(24h): Filter to the last 24 hours.</li>
+  <li>IPAddress in ('{MaliciousIP}'): Filter by malicious IP addresses.</li>
+<li>summarize LoginCount = count() by UserPrincipalName, IPAddress: Summarize login counts by user and IP address.</li>
+</ul>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<ul>
+  <li></li>
+  <li></li>
+  <li></li>
+<li></li>
+</ul>
+
 
 
 
