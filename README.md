@@ -117,11 +117,6 @@ Explanation:
 <li>summarize ProcessCount = count() by DeviceName, InitiatingProcessFileName: Summarize process counts by device and process.</li>
 </ul>
 
-
-
-
-
-
 # Azure Sentinel
 
 ### Suspicious Logins by User
@@ -212,6 +207,34 @@ Explanation:
   <li>AlertSeverity in ("High", "Medium"): Filter for high and medium severity alerts.</li>
 <li>summarize AlertCount = count() by CompromisedEntity, AlertSeverity: Summarize alert counts by compromised entity and severity.</li>
 </ul>
+
+
+## Interpreting Summary Statistics
+
+For each query, the summary statistics provide a count of events grouped by relevant categories (e.g., user, device, IP address). Here's how to interpret them:
+
+<ul>
+  <li>1.	Login Counts: Higher counts of logins from malicious IPs may indicate a targeted attack.</li>
+<li>2.	Alert Counts: Frequent alerts related to specific devices or files can signal compromised endpoints.</li>
+  <li>3.	Failed Attempts: A high number of failed logins can suggest brute-force attacks.</li>
+<li>4.	Access Counts: Repeated access to malicious URLs can indicate phishing activity.</li>
+  <li>5.	Activity Counts: Unusual admin activities may point to privilege escalation.</li>
+<li>6.	Privileged Logins: Multiple logins by admin accounts need to be verified for legitimacy.</li>
+  <li>7.	Transfer Counts: Unusual data transfer activity might be a sign of data exfiltration.</li>
+<li>8.	Click Counts: Users clicking on phishing links should be warned and investigated.</li>
+  <li>9.	Alert Severity: A summary of high and medium alerts helps prioritize incident response.</li>
+<li>10.	Process Counts: Monitoring suspicious processes can reveal malware behavior.
+</li>
+</ul>
+    
+Resources 
+- <a href="https://www.kqlsearch.com/">www.kqlsearch.com</a>
+
+
+
+
+
+
 
 
 
