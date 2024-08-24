@@ -33,17 +33,24 @@ DeviceEvents
 Here are 10 common KQL queries used during a data breach due to phishing and malware, including user activities, network traffic, and system events, using data from Azure Active Directory logs and Defender for Endpoint alerts. Each query includes placeholders for malicious indicators and step-by-step explanations.
 
 ## Defender for Endpoints 
-Malware Alerts by Device
-Suspicious URL Access
-Unusual Data Transfers
-Phishing Email Clicks
-Suspicious Processes
-##Azure Sentinel 
-Suspicious Logins by User
-Failed Login Attempts
-Admin Activities
-Elevated Privileges
-Endpoint Alert Summary
+
+<ul>
+  <li>Malware Alerts by Device</li>
+  <li>Suspicious URL Access</li>
+    <li>Unusual Data Transfers</li>
+  <li>Phishing Email Clicks</li>
+    <li>Suspicious Processes</li>
+</ul>
+
+## Azure Sentinel 
+
+<ul>
+  <li>Suspicious Logins by User</li>
+  <li>Failed Login Attempts</li>
+    <li>Admin Activities</li>
+  <li>Elevated Privileges</li>
+    <li>Endpoint Alert Summary</li>
+</ul>
 
 
 # Defender For Endpoint
