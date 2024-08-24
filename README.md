@@ -26,7 +26,6 @@ Azure Sentinel
 DeviceEvents
 | where TimeGenerated > ago(7d)
 | take 10
-
 ```
 
 # KQL Queries with Explanations and Use Cases
@@ -34,7 +33,7 @@ DeviceEvents
 Here are 10 common KQL queries used during a data breach due to phishing and malware, including user activities, network traffic, and system events, using data from Azure Active Directory logs and Defender for Endpoint alerts. Each query includes placeholders for malicious indicators and step-by-step explanations.
 
 
-## Defender For Endpoint
+# Defender For Endpoint
 
 ### Malware Alerts by Device
 Use Case: Tracks devices affected by known malware.
@@ -43,10 +42,8 @@ DeviceEvents
 | where Timestamp >= ago(24h)
 | where FileHash in ('{MaliciousHash}')
 | summarize AlertCount = count() by DeviceName, FileHash
-
 ```
 Explanation:
-
 <ul>
   <li>DeviceEvents: Table containing device-related events.</li>
   <li>Timestamp >= ago(24h): Filter to the last 24 hours.</li>
@@ -55,7 +52,77 @@ Explanation:
 </ul>
 
 
-## Azure Sentinel
+### Suspicious URL Access
+Use Case: Identifies devices accessing known phishing or malicious sites.
+```
+DeviceNetworkEvents
+| where Timestamp >= ago(24h)
+| where RemoteUrl in ('{MaliciousURL}')
+| summarize AccessCount = count() by DeviceName, RemoteUrl
+```
+Explanation:
+<ul>
+  <li>DeviceNetworkEvents: Table containing network events.</li>
+  <li>Timestamp >= ago(24h): Filter to the last 24 hours.</li>
+  <li>RemoteUrl in ('{MaliciousURL}'): Filter by malicious URLs.</li>
+<li>summarize AccessCount = count() by DeviceName, RemoteUrl: Summarize access counts by device and URL.</li>
+</ul>
+
+
+### Unusual Data Transfers
+Use Case: Identifies potential data exfiltration activities.
+```
+DeviceFileEvents
+| where Timestamp >= ago(24h)
+| where ActionType == "FileCopied" or ActionType == "FileMoved"
+| summarize TransferCount = count() by InitiatingProcessAccountName, DestinationDeviceName
+```
+Explanation:
+<ul>
+  <li>DeviceFileEvents: Table containing file events.</li>
+  <li>Timestamp >= ago(24h): Filter to the last 24 hours.</li>
+  <li>ActionType == "FileCopied" or ActionType == "FileMoved": Filter for file transfer actions.</li>
+<li>summarize TransferCount = count() by InitiatingProcessAccountName, DestinationDeviceName: Summarize transfer counts by account and destination device.</li>
+</ul>
+
+###  Phishing Email Clicks
+Use Case: Tracks users who clicked on phishing links.
+```
+EmailEvents
+| where Timestamp >= ago(24h)
+| where Url in ('{MaliciousURL}')
+| summarize ClickCount = count() by RecipientEmailAddress, Url
+```
+Explanation:
+<ul>
+  <li>EmailEvents: Table containing email events.</li>
+  <li>Timestamp >= ago(24h): Filter to the last 24 hours.</li>
+  <li>Url in ('{MaliciousURL}'): Filter by malicious URLs.</li>
+<li>summarize ClickCount = count() by RecipientEmailAddress, Url: Summarize click counts by recipient and URL.</li>
+</ul>
+
+### Suspicious Processes
+Use Case: Detects potentially malicious processes running on devices.
+```
+DeviceProcessEvents
+| where Timestamp >= ago(24h)
+| where InitiatingProcessFileName in ("powershell.exe", "cmd.exe", "{MaliciousProcess}")
+| summarize ProcessCount = count() by DeviceName, InitiatingProcessFileName
+```
+Explanation:
+<ul>
+  <li>	DeviceProcessEvents: Table containing process events.</li>
+  <li>Timestamp >= ago(24h): Filter to the last 24 hours.</li>
+  <li>InitiatingProcessFileName in ("powershell.exe", "cmd.exe", "{MaliciousProcess}"): Filter for specific processes.</li>
+<li>summarize ProcessCount = count() by DeviceName, InitiatingProcessFileName: Summarize process counts by device and process.</li>
+</ul>
+
+
+
+
+
+
+# Azure Sentinel
 
 ### Suspicious Logins by User
 Use Case: Identifies suspicious login attempts from known malicious IP addresses.
@@ -77,26 +144,73 @@ Explanation:
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+### Failed Login Attempts
+Use Case: Detects accounts targeted by brute-force attacks.
+```
+SigninLogs
+| where TimeGenerated >= ago(24h)
+| where ResultType == "50126" or ResultType == "50076"
+| summarize FailedAttempts = count() by UserPrincipalName
+```
+Explanation:
 
 <ul>
-  <li></li>
-  <li></li>
-  <li></li>
-<li></li>
+  <li>SigninLogs: Table containing login records.</li>
+  <li>TimeGenerated >= ago(24h): Filter to the last 24 hours.</li>
+  <li>ResultType == "50126" or ResultType == "50076": Filter for specific failed login codes.</li>
+<li>	summarize FailedAttempts = count() by UserPrincipalName: Summarize failed login attempts by user.</li>
+</ul>
+
+### Admin Activities
+Use Case: Monitors potentially malicious administrative activities.
+```
+AuditLogs
+| where TimeGenerated >= ago(24h)
+| where OperationName in ("Add member to role", "Reset password", "Delete user")
+| summarize ActivityCount = count() by InitiatedBy
+```
+Explanation:
+
+<ul>
+  <li>AuditLogs: Table containing audit logs.</li>
+  <li>TimeGenerated >= ago(24h): Filter to the last 24 hours.</li>
+  <li>OperationName in ("Add member to role", "Reset password", "Delete user"): Filter for specific admin activities.</li>
+<li>summarize ActivityCount = count() by InitiatedBy: Summarize activity counts by initiator.</li>
+</ul>
+
+### Elevated Privileges
+Use Case: Detects unusual or suspicious logins by admin accounts.
+```
+AADSignInLogs
+| where TimeGenerated >= ago(24h)
+| where UserPrincipalName contains "admin"
+| where ResultType == 0
+| summarize PrivilegedLogins = count() by UserPrincipalName, AppDisplayName
+```
+Explanation:
+<ul>
+  <li>AADSignInLogs: Table containing Azure AD sign-in logs.</li>
+  <li>TimeGenerated >= ago(24h): Filter to the last 24 hours.</li>
+  <li>UserPrincipalName contains "admin": Filter for admin accounts.</li>
+<li>ResultType == 0: Filter for successful logins.</li>
+  <li>summarize PrivilegedLogins = count() by UserPrincipalName, AppDisplayName: Summarize privileged logins by user and application.</li>
+</ul>
+
+
+### Endpoint Alert Summary
+Use Case: Provides a summary of significant security alerts.
+```
+SecurityAlert
+| where TimeGenerated >= ago(24h)
+| where AlertSeverity in ("High", "Medium")
+| summarize AlertCount = count() by CompromisedEntity, AlertSeverity
+```
+Explanation:
+<ul>
+  <li>SecurityAlert: Table containing security alerts.</li>
+  <li>TimeGenerated >= ago(24h): Filter to the last 24 hours.</li>
+  <li>AlertSeverity in ("High", "Medium"): Filter for high and medium severity alerts.</li>
+<li>summarize AlertCount = count() by CompromisedEntity, AlertSeverity: Summarize alert counts by compromised entity and severity.</li>
 </ul>
 
 
