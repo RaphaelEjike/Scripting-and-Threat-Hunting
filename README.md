@@ -1,4 +1,4 @@
-# Scripting and Threat-Hunting
+# KQL threat hunting queries
 
 ## Understanding KQL and Its Use in Microsoft Defender for Endpoints and Azure Sentinel
 
